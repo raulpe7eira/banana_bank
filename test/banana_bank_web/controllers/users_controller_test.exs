@@ -1,16 +1,12 @@
 defmodule BananaBankWeb.UsersControllerTest do
   use BananaBankWeb.ConnCase, async: true
 
-  alias BananaBank.Users
+  import BananaBank.Factory
 
   describe "create/2" do
     test "when given a valid params, returns :created", ctx do
-      params = %{
-        name: "Raul",
-        password: "123",
-        email: "raul@mail.com",
-        cep: "12345678"
-      }
+      %{"name" => expected_name, "email" => expected_email, "cep" => expected_cep} =
+        params = string_params_for(:user)
 
       response =
         ctx.conn
@@ -21,9 +17,9 @@ defmodule BananaBankWeb.UsersControllerTest do
                "message" => "User created successfully",
                "data" => %{
                  "id" => _,
-                 "name" => "Raul",
-                 "email" => "raul@mail.com",
-                 "cep" => "12345678"
+                 "name" => ^expected_name,
+                 "email" => ^expected_email,
+                 "cep" => ^expected_cep
                }
              } = response
     end
@@ -51,13 +47,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
   describe "delete/2" do
     test "when given a valid params, returns :ok", ctx do
-      {:ok, user} =
-        Users.create(%{
-          name: "Raul",
-          password: "123",
-          email: "raul@mail.com",
-          cep: "12345678"
-        })
+      user = insert(:user)
 
       response =
         ctx.conn
@@ -78,11 +68,11 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "when given an invalid params, returns :not_found", ctx do
-      user = %{id: 999}
+      user_id = 999
 
       response =
         ctx.conn
-        |> delete(~p"/api/users/#{user.id}")
+        |> delete(~p"/api/users/#{user_id}")
         |> json_response(:not_found)
 
       expected_response = %{"errors" => %{"message" => "User not found", "data" => "not_found"}}
@@ -93,13 +83,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
   describe "show/2" do
     test "when given a valid params, returns :ok", ctx do
-      {:ok, user} =
-        Users.create(%{
-          name: "Raul",
-          password: "123",
-          email: "raul@mail.com",
-          cep: "12345678"
-        })
+      user = insert(:user)
 
       response =
         ctx.conn
@@ -120,11 +104,11 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "when given an invalid params, returns :not_found", ctx do
-      user = %{id: 999}
+      user_id = 999
 
       response =
         ctx.conn
-        |> get(~p"/api/users/#{user.id}")
+        |> get(~p"/api/users/#{user_id}")
         |> json_response(:not_found)
 
       expected_response = %{"errors" => %{"message" => "User not found", "data" => "not_found"}}
@@ -135,14 +119,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
   describe "update/2" do
     test "when given a valid params, returns :ok", ctx do
-      {:ok, user} =
-        Users.create(%{
-          name: "Raul",
-          password: "123",
-          email: "raul@mail.com",
-          cep: "12345678"
-        })
-
+      user = insert(:user)
       params = %{name: "Raul P"}
 
       response =
@@ -164,13 +141,12 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "when given an invalid params, returns :not_found", ctx do
-      user = %{id: 999}
-
+      user_id = 999
       params = %{name: "Raul P"}
 
       response =
         ctx.conn
-        |> put(~p"/api/users/#{user.id}", params)
+        |> put(~p"/api/users/#{user_id}", params)
         |> json_response(:not_found)
 
       expected_response = %{"errors" => %{"message" => "User not found", "data" => "not_found"}}
