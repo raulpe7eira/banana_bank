@@ -2,11 +2,18 @@ defmodule BananaBankWeb.UsersControllerTest do
   use BananaBankWeb.ConnCase, async: true
 
   import BananaBank.Factory
+  import Mox
+
+  alias BananaBank.ViaCep.ClientBehaviourMock
+
+  setup :verify_on_exit!
 
   describe "create/2" do
     test "when given a valid params, returns :created", ctx do
       %{"name" => expected_name, "email" => expected_email, "cep" => expected_cep} =
         params = string_params_for(:user)
+
+      expect(ClientBehaviourMock, :call, fn _ -> {:ok, %{}} end)
 
       response =
         ctx.conn
@@ -26,6 +33,8 @@ defmodule BananaBankWeb.UsersControllerTest do
 
     test "when given an invalid params, returns :bad_request", ctx do
       params = %{}
+
+      expect(ClientBehaviourMock, :call, fn _ -> {:ok, %{}} end)
 
       response =
         ctx.conn
@@ -75,7 +84,9 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> delete(~p"/api/users/#{user_id}")
         |> json_response(:not_found)
 
-      expected_response = %{"errors" => %{"message" => "User not found", "data" => "not_found"}}
+      expected_response = %{
+        "errors" => %{"message" => "Resource not found", "data" => "not_found"}
+      }
 
       assert response == expected_response
     end
@@ -111,7 +122,9 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> get(~p"/api/users/#{user_id}")
         |> json_response(:not_found)
 
-      expected_response = %{"errors" => %{"message" => "User not found", "data" => "not_found"}}
+      expected_response = %{
+        "errors" => %{"message" => "Resource not found", "data" => "not_found"}
+      }
 
       assert response == expected_response
     end
@@ -149,7 +162,9 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> put(~p"/api/users/#{user_id}", params)
         |> json_response(:not_found)
 
-      expected_response = %{"errors" => %{"message" => "User not found", "data" => "not_found"}}
+      expected_response = %{
+        "errors" => %{"message" => "Resource not found", "data" => "not_found"}
+      }
 
       assert response == expected_response
     end
