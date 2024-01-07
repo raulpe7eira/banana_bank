@@ -13,8 +13,12 @@ defmodule BananaBankWeb.ErrorJSON do
     %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
   end
 
+  def error(%{status: :invalid_cep}) do
+    %{errors: %{cep: ["invalid value"]}}
+  end
+
   def error(%{status: :not_found}) do
-    %{errors: %{message: "User not found", data: :not_found}}
+    %{errors: %{message: "Resource not found", data: :not_found}}
   end
 
   def error(%{changeset: changeset}) do
