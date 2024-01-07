@@ -9,7 +9,7 @@ defmodule BananaBankWeb.Router do
     pipe_through :api
 
     get "/", WelcomeController, :index
-    resources "/users", UsersController, only: [:create]
+    resources "/users", UsersController, only: [:create, :show]
   end
 
   # Enable LiveDashboard in development

@@ -8,6 +8,13 @@ defmodule BananaBankWeb.UsersJSON do
     }
   end
 
+  def show(%{user: user}) do
+    %{
+      message: "User shown successfully",
+      data: data(user)
+    }
+  end
+
   defp data(%User{} = user) do
     %{
       id: user.id,
