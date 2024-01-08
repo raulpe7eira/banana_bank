@@ -17,6 +17,10 @@ defmodule BananaBankWeb.ErrorJSON do
     %{errors: %{cep: ["invalid value"]}}
   end
 
+  def error(%{status: :invalid_user}) do
+    %{errors: %{user_id: ["invalid value"]}}
+  end
+
   def error(%{status: :not_found}) do
     %{errors: %{message: "Resource not found", data: :not_found}}
   end

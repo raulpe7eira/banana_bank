@@ -1,4 +1,4 @@
-defmodule BananaBank.Accounts.Acount do
+defmodule BananaBank.Accounts.Account do
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -19,6 +19,7 @@ defmodule BananaBank.Accounts.Acount do
     account
     |> cast(params, @fields)
     |> validate_required(@required_fields)
+    |> unique_constraint(:user_id)
     |> check_constraint(:balance, name: :balance_must_be_positive)
   end
 end
