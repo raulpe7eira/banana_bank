@@ -13,8 +13,20 @@ defmodule BananaBankWeb.ErrorJSON do
     %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
   end
 
+  def error(%{status: :invalid_account}) do
+    %{errors: %{account_id: ["invalid value"]}}
+  end
+
+  def error(%{status: :invalid_amount}) do
+    %{errors: %{amount: ["invalid value"]}}
+  end
+
   def error(%{status: :invalid_cep}) do
     %{errors: %{cep: ["invalid value"]}}
+  end
+
+  def error(%{status: :invalid_transaction}) do
+    %{errors: %{params: ["invalid values"]}}
   end
 
   def error(%{status: :invalid_user}) do
