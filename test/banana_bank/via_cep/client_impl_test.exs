@@ -8,9 +8,8 @@ defmodule BananaBank.ViaCep.ClientImplTest do
 
   setup :verify_on_exit!
 
-  setup do
-    bypass = Bypass.open()
-    {:ok, bypass: bypass}
+  setup do 
+    {:ok, bypass: Bypass.open()}
   end
 
   describe "call/1" do

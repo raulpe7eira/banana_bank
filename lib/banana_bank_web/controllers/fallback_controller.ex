@@ -1,6 +1,8 @@
 defmodule BananaBankWeb.FallbackController do
   use BananaBankWeb, :controller
 
+  alias Ecto.Changeset
+
   def call(conn, {:error, :invalid_account}) do
     conn
     |> put_status(:bad_request)
@@ -43,10 +45,24 @@ defmodule BananaBankWeb.FallbackController do
     |> render(:error, status: :not_found)
   end
 
-  def call(conn, {:error, changeset}) do
+  def call(conn, {:error, :unauthorized}) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(json: BananaBankWeb.ErrorJSON)
+    |> render(:error, status: :unauthorized)
+  end
+
+  def call(conn, {:error, %Changeset{} = changeset}) do
     conn
     |> put_status(:bad_request)
     |> put_view(json: BananaBankWeb.ErrorJSON)
     |> render(:error, changeset: changeset)
+  end
+
+  def call(conn, {:error, generic}) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(json: BananaBankWeb.ErrorJSON)
+    |> render(:error, generic: generic)
   end
 end

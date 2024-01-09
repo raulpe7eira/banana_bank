@@ -13,6 +13,14 @@ defmodule BananaBankWeb.ErrorJSON do
     %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
   end
 
+  def error(%{changeset: changeset}) do
+    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_errors/1)}
+  end
+
+  def error(%{generic: generic}) do
+    %{errors: %{message: "Generic error", data: generic}}
+  end
+
   def error(%{status: :invalid_account}) do
     %{errors: %{account_id: ["invalid value"]}}
   end
@@ -37,8 +45,8 @@ defmodule BananaBankWeb.ErrorJSON do
     %{errors: %{message: "Resource not found", data: :not_found}}
   end
 
-  def error(%{changeset: changeset}) do
-    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_errors/1)}
+  def error(%{status: :unauthorized}) do
+    %{errors: %{message: "Unauthorized access", data: :unauthorized}}
   end
 
   defp translate_errors({msg, opts}) do

@@ -3,6 +3,7 @@ defmodule BananaBankWeb.UsersController do
 
   alias BananaBank.Users
   alias BananaBank.Users.User
+  alias BananaBankWeb.Token
 
   action_fallback BananaBankWeb.FallbackController
 
@@ -19,6 +20,16 @@ defmodule BananaBankWeb.UsersController do
       conn
       |> put_status(:ok)
       |> render(:delete, user: user)
+    end
+  end
+
+  def login(conn, %{"id" => id, "password" => password}) do
+    with {:ok, %User{} = user} <- Users.login(id, password) do
+      token = Token.sign(user)
+
+      conn
+      |> put_status(:ok)
+      |> render(:login, token: token)
     end
   end
 
