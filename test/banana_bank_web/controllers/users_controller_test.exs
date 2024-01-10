@@ -60,6 +60,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       response =
         ctx.conn
+        |> authorize(user)
         |> delete(~p"/api/users/#{user.id}")
         |> json_response(:ok)
 
@@ -77,11 +78,13 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "when given an invalid params, returns :not_found", ctx do
-      user_id = 999
+      user = insert(:user)
+      invalid_user_id = 999
 
       response =
         ctx.conn
-        |> delete(~p"/api/users/#{user_id}")
+        |> authorize(user)
+        |> delete(~p"/api/users/#{invalid_user_id}")
         |> json_response(:not_found)
 
       expected_response = %{
@@ -98,6 +101,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       response =
         ctx.conn
+        |> authorize(user)
         |> get(~p"/api/users/#{user.id}")
         |> json_response(:ok)
 
@@ -115,11 +119,13 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "when given an invalid params, returns :not_found", ctx do
-      user_id = 999
+      user = insert(:user)
+      invalid_user_id = 999
 
       response =
         ctx.conn
-        |> get(~p"/api/users/#{user_id}")
+        |> authorize(user)
+        |> get(~p"/api/users/#{invalid_user_id}")
         |> json_response(:not_found)
 
       expected_response = %{
@@ -137,6 +143,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       response =
         ctx.conn
+        |> authorize(user)
         |> put(~p"/api/users/#{user.id}", params)
         |> json_response(:ok)
 
@@ -154,12 +161,14 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "when given an invalid params, returns :not_found", ctx do
-      user_id = 999
+      user = insert(:user)
+      invalid_user_id = 999
       params = %{name: "Raul P"}
 
       response =
         ctx.conn
-        |> put(~p"/api/users/#{user_id}", params)
+        |> authorize(user)
+        |> put(~p"/api/users/#{invalid_user_id}", params)
         |> json_response(:not_found)
 
       expected_response = %{
@@ -168,5 +177,9 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       assert response == expected_response
     end
+  end
+
+  defp authorize(conn, user) do
+    put_req_header(conn, "authorization", "Bearer " <> BananaBankWeb.Token.sign(user))
   end
 end
