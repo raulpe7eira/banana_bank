@@ -22,6 +22,11 @@ config :banana_bank, BananaBankWeb.Endpoint,
   pubsub_server: BananaBank.PubSub,
   live_view: [signing_salt: "3kee587G"]
 
+# Configure your token
+config :banana_bank, BananaBankWeb.Token,
+  # Salt value used to sign token
+  sign_salt_token: "banana_bank_sign_salt"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

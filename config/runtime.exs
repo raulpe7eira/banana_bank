@@ -65,6 +65,18 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  # The sign salt token is used to sign tokens in logins
+  sign_salt_token =
+    System.get_env("SIGN_SALT_TOKEN") ||
+      raise """
+      environment variable SIGN_SALT_TOKEN is missing.
+      You can generate one by calling: mix phx.gen.secret
+      """
+
+  config :banana_bank, BananaBankWeb.Token,
+    # Salt value used to sign token 
+    sign_salt_token: sign_salt_token
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key

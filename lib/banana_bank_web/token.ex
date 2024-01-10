@@ -3,13 +3,17 @@ defmodule BananaBankWeb.Token do
   alias BananaBankWeb.Endpoint
   alias Phoenix.Token
 
-  @sign_salt "banana_bank_api"
-
   def sign(%User{} = user) do
-    Token.sign(Endpoint, @sign_salt, %{user_id: user.id})
+    Token.sign(Endpoint, sign_salt_token(), %{user_id: user.id})
   end
 
   def verify(token) do
-    Token.verify(Endpoint, @sign_salt, token)
+    Token.verify(Endpoint, sign_salt_token(), token)
+  end
+
+  def sign_salt_token do
+    :banana_bank
+    |> Application.get_env(__MODULE__)
+    |> Keyword.fetch!(:sign_salt_token)
   end
 end
