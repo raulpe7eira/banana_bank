@@ -21,6 +21,8 @@ $ iex -S mix phx.server
 # retrieve welcome
 curl -X GET 'http://localhost:4000/api'
 
+# -----------------------------------------------------------------------------
+
 # create user
 curl -X POST 'http://localhost:4000/api/users' \
 -H 'Content-Type: application/json' \
@@ -65,6 +67,8 @@ curl -X PUT 'http://localhost:4000/api/users/:id' \
 curl -X DELETE 'http://localhost:4000/api/users/:id' \
 -H 'Authorization: :token'
 
+# -----------------------------------------------------------------------------
+
 # create account (
 #   :token - authorization token
 # )
@@ -75,6 +79,8 @@ curl -X POST 'http://localhost:4000/api/accounts' \
     "user_id": "1",
     "balance": 100000
 }'
+
+# -----------------------------------------------------------------------------
 
 # create transaction between accounts (
 #   :token - authorization token
