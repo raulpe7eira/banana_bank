@@ -62,7 +62,7 @@ curl -X PUT 'http://localhost:4000/api/users/:id' \
 #   :id - user identifier
 #   :token - authorization token
 # )
-curl -X DELETE 'http://localhost:4000/api/users/:id'
+curl -X DELETE 'http://localhost:4000/api/users/:id' \
 -H 'Authorization: :token'
 
 # create account (
