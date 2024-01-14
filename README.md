@@ -8,6 +8,7 @@ This code corresponding to the [Section 3:9 - Elixir e Phoenix do Zero by Rafael
 
 ```bash
 $ cd banana_bank
+$ asdf install
 $ mix compile
 $ mix ecto.setup
 $ mix test
