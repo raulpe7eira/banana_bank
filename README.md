@@ -1,18 +1,90 @@
 # BananaBank
 
-To start your Phoenix server:
+This code corresponding to the [Section 3:9 - Elixir e Phoenix do Zero by Rafael Camarda](https://www.udemy.com/course/elixir-e-phoenix-do-zero) lab.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+> The project simulates a bank, where it's possible to register a user with a real CEP, an account for an user, and do transactions between accounts.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## Compilation, tests and runs
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+```bash
+$ cd banana_bank
+$ mix compile
+$ mix ecto.setup
+$ mix test
+$ iex -S mix phx.server
+```
 
-## Learn more
+## How to use?
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+```bash
+# retrieve welcome
+curl -X GET 'http://localhost:4000/api'
+
+# create user
+curl -X POST 'http://localhost:4000/api/users' \
+-H 'Content-Type: application/json' \
+-d '{
+    "cep": "12312312",
+    "email": "raul@mail.com",
+    "password": "111111",
+    "name": "Raul"
+}'
+
+# login user
+curl -X POST 'http://localhost:4000/api/users/login' \
+-H 'Content-Type: application/json' \
+-d '{
+    "id": "1",
+    "password": "111111"
+}'
+
+# retrieve user by id (
+#   :id - user identifier
+#   :token - authorization token
+# )
+curl -X GET 'http://localhost:4000/api/users/:id' \
+-H 'Authorization: :token'
+
+# update user by id (
+#   :id - user identifier
+#   :token - authorization token
+# )
+curl -X PUT 'http://localhost:4000/api/users/:id' \
+-H 'Authorization: :token' \
+-H 'Content-Type: application/json' \
+-d '{
+    "email": "raul-new@mail.com",
+    "password": "aaaaaa"
+}'
+
+# delete user by id (
+#   :id - user identifier
+#   :token - authorization token
+# )
+curl -X DELETE 'http://localhost:4000/api/users/:id'
+-H 'Authorization: :token'
+
+# create account (
+#   :token - authorization token
+# )
+curl -X POST 'http://localhost:4000/api/accounts' \
+-H 'Authorization: :token' \
+-H 'Content-Type: application/json' \
+-d '{
+    "user_id": "1",
+    "balance": 100000
+}'
+
+# create transaction between accounts (
+#   :token - authorization token
+# )
+curl -X POST 'http://localhost:4000/api/accounts/transactions' \
+-H 'Authorization: :token' \
+-H 'Content-Type: application/json' \
+-d '{
+    "from_account_id": "1",
+    "to_account_id": "2",
+    "amount": 0.01
+}'
+```
+
